@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FastAPI Chat</title>
+  </head>
+  <body>
+    <h2>Chat Room</h2>
+
+    <input id="username" placeholder="Enter username" />
+    <button onclick="joinChat()">Join Chat</button>
+
+    <div id="chatArea" style="display: none">
+      <input id="message" placeholder="Type message..." />
+      <button onclick="sendMessage()">Send</button>
+      <ul id="chat"></ul>
+    </div>
+
+    <script>
+      let ws;
+
+      function joinChat() {
+        let username = document.getElementById("username").value;
+        ws = new WebSocket(`ws://127.0.0.1:8000/ws?username=${username}`);
+        ws.onmessage = function (event) {
+          let chat = document.getElementById("chat");
+          let li = document.createElement("li");
+          li.textContent = event.data;
+          chat.appendChild(li);
+        };
+        document.getElementById("chatArea").style.display = "block";
+      }
+
+      function sendMessage() {
+        let input = document.getElementById("message");
+        ws.send(input.value);
+        input.value = "";
+      }
+    </script>
+  </body>
+</html>
