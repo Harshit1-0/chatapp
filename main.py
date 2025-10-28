@@ -1,6 +1,7 @@
 from fastapi import WebSocket , FastAPI , WebSocketDisconnect
 from typing import List
 app = FastAPI()
+from fastapi.responses import FileResponse
 
 
 class ConnectionManager :
@@ -32,7 +33,9 @@ manager = ConnectionManager()
 
 
 
-
+@app.get('/')
+async def main():
+    return FileResponse('index.html')
 @app.websocket('/ws')
 async def websocket_endpoint(username : str , websocket :WebSocket) :
     await manager.connect(websocket , username)
